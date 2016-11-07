@@ -37,7 +37,7 @@ public class BoardService {
 			if ((currentPage % PAGESIZE) != 0) {
 				page.setStartPage(((currentPage / PAGESIZE) * 5) + 1);
 			} else {
-				page.setStartPage(1);
+				page.setStartPage((currentPage) - PAGESIZE + 1);
 			}
 		} else {
 			page.setStartPage(1);

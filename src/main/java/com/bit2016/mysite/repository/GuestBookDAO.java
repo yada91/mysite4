@@ -13,10 +13,8 @@ public class GuestBookDAO {
 	@Autowired
 	private SqlSession sqlSession;
 
-	public Long insert(GuestBook vo) {
+	public void insert(GuestBook vo) {
 		sqlSession.insert("guestbook.insert", vo);
-		return null;
-
 	}
 
 	public List<GuestBook> selectAll() {
@@ -29,9 +27,8 @@ public class GuestBookDAO {
 		return vo;
 	}
 
-	public boolean delete(GuestBook vo) {
+	public void delete(GuestBook vo) {
 		sqlSession.delete("guestbook.delete", vo);
-		return false;
 	}
 
 	public void delete(Long id) {

@@ -14,7 +14,7 @@
 	<select id="getList" resultType="guestbook">
 	<![CDATA[
 		select rank() over (order by regdate asc) as rank, 
-		id, name, password, content, to_char(regdate,'yyyy-mm-dd hh:mi:ss') as regDate
+		id, name, password, content, to_char(regdate,'yyyy-mm-dd hh:mi:ss') as regdate
 		from guestbook order by regdate desc
 	]]>
 	</select>
