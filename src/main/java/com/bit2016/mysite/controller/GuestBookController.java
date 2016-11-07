@@ -46,4 +46,10 @@ public class GuestBookController {
 		model.addAttribute("id", id);
 		return "guestbook/deleteform";
 	}
+
+	@RequestMapping("/ajax")
+	public String ajaxList() {
+
+		return "";
+	}
 }

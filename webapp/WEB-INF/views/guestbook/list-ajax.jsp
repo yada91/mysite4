@@ -80,7 +80,7 @@
 		}
 		++page;
 		$.ajax({
-			url : "${pageContext.request.contextPath }/api/gb?a=ajax-list&p="
+			url : "${pageContext.request.contextPath }/api/gb/ajax-list&p="
 					+ page,
 			type : "get",
 			dataType : "json",

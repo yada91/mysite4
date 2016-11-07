@@ -17,9 +17,7 @@
 		<div id="content">
 			<div id="board">
 				<form class="board-form" method="post"
-					action="${pageContext.request.contextPath }/board?p=${p}">
-					<input type="hidden" name="a" value="reply"> <input
-						type="hidden" name="no" value="${no }">
+					action="${pageContext.request.contextPath }/board/reply?rno=${no }& p=${p}">
 					<table class="tbl-ex">
 						<tr>
 							<th colspan="2">글쓰기</th>

@@ -24,7 +24,6 @@ public class BoardController {
 	@RequestMapping("")
 	public String list(@RequestParam(value = "p", required = true, defaultValue = "1") int p, Model model) {
 		HashMap<String, Object> hm = boardService.list(p);
-
 		model.addAttribute("hm", hm);
 		return "board/list";
 	}
@@ -74,5 +73,21 @@ public class BoardController {
 			@RequestParam(value = "no", required = true, defaultValue = "1") int no) {
 		boardService.update(vo);
 		return "redirect:/board/view?no=" + no + "&p=" + p;
+	}
+
+	@RequestMapping(value = "/reply", method = RequestMethod.GET)
+	public String reply(@RequestParam(value = "rno", required = true, defaultValue = "0") Long rno,
+			@RequestParam(value = "p", required = true, defaultValue = "1") int p, Model model) {
+		model.addAttribute("no", rno);
+		model.addAttribute("p", p);
+		return "board/reply";
+	}
+
+	@RequestMapping(value = "/reply", method = RequestMethod.POST)
+	public String reply(@RequestParam(value = "rno", required = true, defaultValue = "0") Long rno,
+			@RequestParam(value = "p", required = true, defaultValue = "1") int p, @ModelAttribute Board vo,
+			HttpSession session, Model model) {
+		boardService.reply(vo, session, rno);
+		return "redirect:/board?p=" + p;
 	}
 }

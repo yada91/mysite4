@@ -7,6 +7,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.bit2016.mysite.vo.Board;
@@ -15,11 +18,14 @@ import com.bit2016.mysite.vo.Page;
 @Repository
 public class BoardDAO {
 
-	public static void insert(Board board) {
+	@Autowired
+	private DataSource datasource;
+
+	public void insert(Board board) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		try {
-			conn = DAOConnection.connection();
+			conn = datasource.getConnection();
 
 			String sql = "INSERT INTO BOARD VALUES " + "(board_SEQ.NEXTVAL, ?,?, SYSDATE, 0,?,"
 					+ "NVL ( (SELECT MAX (group_no) FROM board), 0) + 1,1,0)";
@@ -46,14 +52,14 @@ public class BoardDAO {
 		}
 	}
 
-	public static ArrayList<Board> select(Page page) {
+	public ArrayList<Board> select(Page page) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		ArrayList<Board> list = null;
 
 		try {
-			conn = DAOConnection.connection();
+			conn = datasource.getConnection();
 			String sql = "SELECT * FROM (SELECT ROWNUM AS rn, a1.* FROM ( SELECT b.no, b.title, b.hits, TO_CHAR (b.reg_date, 'yyyy-mm-dd hh:mi:ss') AS reg_date, b.DEPTH, u.NAME,b.USER_NO "
 					+ "FROM board b, users u WHERE b.USER_NO = u.NO ORDER BY group_no DESC, order_no ASC) a1) a2 WHERE (?- 1) * ? + 1 <= a2.rn and a2.rn <= ? * ?";
 
@@ -108,14 +114,14 @@ public class BoardDAO {
 		return list;
 	}
 
-	public static ArrayList<Board> search(Page page, String kwd) {
+	public ArrayList<Board> search(Page page, String kwd) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		ArrayList<Board> list = null;
 
 		try {
-			conn = DAOConnection.connection();
+			conn = datasource.getConnection();
 			String sql = "SELECT * FROM (SELECT ROWNUM AS rn, a1.* FROM (  SELECT b.no, b.title, b.hits, TO_CHAR (b.reg_date, 'yyyy-mm-dd hh:mi:ss') AS reg_date, b.DEPTH, u.NAME, b.USER_NO FROM board b, users u WHERE b.USER_NO = u.NO AND (b.TITLE like ? OR b.CONTENT LIKE ?) ORDER BY group_no DESC, order_no ASC) a1) a2 WHERE (? - 1) * ? + 1 <= a2.rn AND a2.rn <= ? * ?";
 
 			pstmt = conn.prepareStatement(sql);
@@ -171,13 +177,13 @@ public class BoardDAO {
 		return list;
 	}
 
-	public static int count() {
+	public int count() {
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
 		int countNum = 0;
 		try {
-			conn = DAOConnection.connection();
+			conn = datasource.getConnection();
 			String sql = "select count(*) from board";
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sql);
@@ -205,13 +211,13 @@ public class BoardDAO {
 		return countNum;
 	}
 
-	public static int searchCount(String kwd) {
+	public int searchCount(String kwd) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		int countNum = 0;
 		try {
-			conn = DAOConnection.connection();
+			conn = datasource.getConnection();
 			String sql = "select count(*) from board where content like ? OR title like ?";
 
 			stmt = conn.prepareStatement(sql);
@@ -242,13 +248,13 @@ public class BoardDAO {
 		return countNum;
 	}
 
-	public static Board view(Long no) {
+	public Board view(Long no) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		Board board = null;
 		try {
-			conn = DAOConnection.connection();
+			conn = datasource.getConnection();
 			String sql = "select title,content,user_no from board where no =? ";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setLong(1, no);
@@ -281,13 +287,13 @@ public class BoardDAO {
 		return board;
 	}
 
-	public static Board replyView(Long no) {
+	public Board replyView(Long no) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		Board board = null;
 		try {
-			conn = DAOConnection.connection();
+			conn = datasource.getConnection();
 			String sql = "select group_no,order_no,depth from board where no =? ";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setLong(1, no);
@@ -320,11 +326,11 @@ public class BoardDAO {
 		return board;
 	}
 
-	public static void update(Board board) {
+	public void update(Board board) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		try {
-			conn = DAOConnection.connection();
+			conn = datasource.getConnection();
 
 			String sql = "UPDATE board set title = ?, content= ? where no = ?";
 
@@ -349,11 +355,11 @@ public class BoardDAO {
 		}
 	}
 
-	public static void updateHits(Long no) {
+	public void updateHits(Long no) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		try {
-			conn = DAOConnection.connection();
+			conn = datasource.getConnection();
 
 			String sql = "UPDATE board set hits = hits + 1  where no = ?";
 
@@ -376,11 +382,11 @@ public class BoardDAO {
 		}
 	}
 
-	public static void updateReply(Board board) {
+	public void updateReply(Board board) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		try {
-			conn = DAOConnection.connection();
+			conn = datasource.getConnection();
 
 			String sql = "UPDATE board SET order_no = order_no + 1 WHERE group_no = ?  AND order_no > ?";
 
@@ -404,11 +410,11 @@ public class BoardDAO {
 		}
 	}
 
-	public static void insertReply(Board board) {
+	public void insertReply(Board board) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		try {
-			conn = DAOConnection.connection();
+			conn = datasource.getConnection();
 
 			String sql = "INSERT INTO BOARD VALUES (board_SEQ.NEXTVAL, ?,?, SYSDATE, 0,?,?,?,?)";
 
@@ -436,11 +442,11 @@ public class BoardDAO {
 		}
 	}
 
-	public static void delete(Long no) {
+	public void delete(Long no) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		try {
-			conn = DAOConnection.connection();
+			conn = datasource.getConnection();
 
 			String sql = "DELETE FROM BOARD WHERE no = ?";
 

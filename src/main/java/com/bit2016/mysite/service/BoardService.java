@@ -22,7 +22,7 @@ public class BoardService {
 	final int PAGESIZE = 5;
 
 	public HashMap<String, Object> list(int p) {
-		double total = BoardDAO.count();
+		double total = boardDAO.count();
 		int lastPage = (int) Math.ceil(total / (double) PAGESIZE);
 
 		Page page = new Page();
@@ -45,7 +45,7 @@ public class BoardService {
 
 		HashMap<String, Object> hm = new HashMap<String, Object>();
 		hm.put("total", (int) total);
-		hm.put("list", BoardDAO.select(page));
+		hm.put("list", boardDAO.select(page));
 		hm.put("page", page);
 
 		return hm;
@@ -54,7 +54,7 @@ public class BoardService {
 
 	public HashMap<String, Object> view(Long no, int p) {
 		Board board = boardDAO.view(no);
-		BoardDAO.updateHits(no);
+		boardDAO.updateHits(no);
 		HashMap<String, Object> hm = new HashMap<String, Object>();
 		hm.put("view", board);
 		hm.put("p", p);
@@ -65,7 +65,7 @@ public class BoardService {
 
 		Users authUser = (Users) session.getAttribute("authUser");
 		vo.setUser_no(authUser.getNo());
-		BoardDAO.insert(vo);
+		boardDAO.insert(vo);
 	}
 
 	public void delete(Long no) {
@@ -74,8 +74,23 @@ public class BoardService {
 
 	public void update(Board vo) {
 
-		BoardDAO.update(vo);
+		boardDAO.update(vo);
 
 	}
 
+	public void reply(Board vo, HttpSession session, Long no) {
+
+		Users authUser = (Users) session.getAttribute("authUser");
+		vo.setUser_no(authUser.getNo());
+
+		Board board = boardDAO.replyView(no);
+
+		vo.setUser_no(authUser.getNo());
+		vo.setGroup_no(board.getGroup_no());
+		vo.setDepth(board.getDepth() + 1);
+		vo.setOrder_no(board.getOrder_no() + 1);
+
+		boardDAO.updateReply(vo);
+		boardDAO.insertReply(vo);
+	}
 }

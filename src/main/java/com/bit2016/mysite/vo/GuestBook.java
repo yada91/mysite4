@@ -1,5 +1,9 @@
 package com.bit2016.mysite.vo;
 
+/**
+ * @author bit-user
+ *
+ */
 public class GuestBook {
 
 	private long rank;
@@ -41,20 +45,20 @@ public class GuestBook {
 		this.content = content;
 	}
 
-	public String getRegdate() {
-		return regdate;
-	}
-
-	public void setRegdate(String regdate) {
-		this.regdate = regdate;
-	}
-
 	public long getRank() {
 		return rank;
 	}
 
 	public void setRank(long rank) {
 		this.rank = rank;
+	}
+
+	public String getRegdate() {
+		return regdate;
+	}
+
+	public void setRegdate(String regdate) {
+		this.regdate = regdate;
 	}
 
 }

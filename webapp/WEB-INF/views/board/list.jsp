@@ -26,13 +26,13 @@
 							width : 400,
 							modal : true,
 							buttons : {
-								"Delete items" : function() {
+								"삭제" : function() {
 									var deleteUrl = "${pageContext.request.contextPath }/board/delete?no="
 											+ dataId;
 									window.location.href = deleteUrl;
 									$(this).dialog("close");
 								},
-								Cancel : function() {
+								"취소" : function() {
 									$(this).dialog("close");
 								}
 							}
@@ -94,12 +94,17 @@
 							<td>[${list.reg_date }]</td>
 							<c:choose>
 								<c:when test="${empty authUser }">
+									<td></td>
 								</c:when>
 								<c:otherwise>
 									<c:if test="${authUser.no == list.user_no}">
 										<td id="delete_td"><a href="" data-id="${list.no}"
 											class="del"><img
 												src="${pageContext.request.contextPath }/assets/images/recycle.png"></a></td>
+									</c:if>
+									<c:if test="${authUser.no != list.user_no}">
+										<td><img
+											src="${pageContext.request.contextPath }/assets/images/recycle1.png"></td>
 									</c:if>
 								</c:otherwise>
 							</c:choose>
@@ -166,8 +171,7 @@
 				</div>
 			</div>
 		</div>
-		<div id="dialog-confirm" title="Empty the recycle bin?"
-			style="display: none">
+		<div id="dialog-confirm" title="게시글 삭제" style="display: none">
 			<p>
 				<span class="ui-icon ui-icon-alert"
 					style="float: left; margin: 12px 12px 20px 0;"></span>삭제하시겠습니까?
