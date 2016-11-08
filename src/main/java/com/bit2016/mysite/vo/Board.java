@@ -5,30 +5,14 @@ public class Board {
 	private Long no;
 	private String title;
 	private String content;
-	private String reg_date;
+	private String regDate;
 	private Long hits;
-	private Long user_no;
-	private Long group_no;
-	private Long order_no;
+	private Long userNo;
+	private Long groupNo;
+	private Long orderNo;
 	private Long depth;
 	private Long rn;
-	private String user_name;
-
-	public String getUser_name() {
-		return user_name;
-	}
-
-	public void setUser_name(String user_name) {
-		this.user_name = user_name;
-	}
-
-	public Long getRn() {
-		return rn;
-	}
-
-	public void setRn(Long rn) {
-		this.rn = rn;
-	}
+	private String userName;
 
 	public Long getNo() {
 		return no;
@@ -54,12 +38,12 @@ public class Board {
 		this.content = content;
 	}
 
-	public String getReg_date() {
-		return reg_date;
+	public String getRegDate() {
+		return regDate;
 	}
 
-	public void setReg_date(String reg_date) {
-		this.reg_date = reg_date;
+	public void setRegDate(String regDate) {
+		this.regDate = regDate;
 	}
 
 	public Long getHits() {
@@ -70,28 +54,28 @@ public class Board {
 		this.hits = hits;
 	}
 
-	public Long getUser_no() {
-		return user_no;
+	public Long getUserNo() {
+		return userNo;
 	}
 
-	public void setUser_no(Long user_no) {
-		this.user_no = user_no;
+	public void setUserNo(Long userNo) {
+		this.userNo = userNo;
 	}
 
-	public Long getGroup_no() {
-		return group_no;
+	public Long getGroupNo() {
+		return groupNo;
 	}
 
-	public void setGroup_no(Long group_no) {
-		this.group_no = group_no;
+	public void setGroupNo(Long groupNo) {
+		this.groupNo = groupNo;
 	}
 
-	public Long getOrder_no() {
-		return order_no;
+	public Long getOrderNo() {
+		return orderNo;
 	}
 
-	public void setOrder_no(Long order_no) {
-		this.order_no = order_no;
+	public void setOrderNo(Long orderNo) {
+		this.orderNo = orderNo;
 	}
 
 	public Long getDepth() {
@@ -102,11 +86,27 @@ public class Board {
 		this.depth = depth;
 	}
 
+	public Long getRn() {
+		return rn;
+	}
+
+	public void setRn(Long rn) {
+		this.rn = rn;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
 	@Override
 	public String toString() {
-		return "Board [no=" + no + ", title=" + title + ", content=" + content + ", reg_date=" + reg_date + ", hits="
-				+ hits + ", user_no=" + user_no + ", group_no=" + group_no + ", order_no=" + order_no + ", depth="
-				+ depth + ", rn=" + rn + ", user_name=" + user_name + "]";
+		return "Board [no=" + no + ", title=" + title + ", content=" + content + ", regDate=" + regDate + ", hits="
+				+ hits + ", userNo=" + userNo + ", groupNo=" + groupNo + ", orderNo=" + orderNo + ", depth=" + depth
+				+ ", rn=" + rn + ", userName=" + userName + "]";
 	}
 
 }

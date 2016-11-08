@@ -15,8 +15,13 @@
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
-	var dataId, p, dialog;
+	var dataId, p, dialog, keyword;
+
 	$(function() {
+		$("#kwdsubmit").click(function() {
+			keyword = $("#kwd").val();
+			console.log(keyword);
+		});
 		dialog = $("#dialog-confirm")
 				.dialog(
 						{
@@ -28,7 +33,7 @@
 							buttons : {
 								"삭제" : function() {
 									var deleteUrl = "${pageContext.request.contextPath }/board/delete?no="
-											+ dataId;
+											+ dataId + "&kwd=" + keyword;
 									window.location.href = deleteUrl;
 									$(this).dialog("close");
 								},
@@ -42,7 +47,8 @@
 			event.preventDefault();
 			dialog.dialog("open");
 			dataId = $(this).data("id");
-		});//라이브 이벤트 추가 
+		});
+
 	});
 </script>
 </head>
@@ -51,16 +57,17 @@
 	<c:set var="size" value="${hm.page.listSize}" />
 	<c:set var="last" value="${hm.page.lastPage}" />
 	<c:set var="current" value="${hm.page.currentPage}" />
+	<c:set var="kwd" value="${hm.page.kwd}" />
 	<c:set var="count" value="${hm.total}" />
+
 	<div id="container">
 		<c:import url="/WEB-INF/views/includes/header.jsp" />
 		<div id="content">
 			<div id="board">
 				<form id="search_form"
-					action="${pageContext.request.contextPath }/board/search"
-					method="get">
+					action="${pageContext.request.contextPath }/board" method="get">
 					<input type="text" id="kwd" name="kwd" value=""> <input
-						type="submit" value="찾기">
+						id="kwdsubmit" type="submit" value="찾기">
 				</form>
 				<table class="tbl-ex" id="board_table">
 					<tr>
@@ -78,31 +85,31 @@
 							<td class="left" style="padding-left:${list.depth*20}px"><c:choose>
 									<c:when test="${list.depth == 0}">
 										<a
-											href="${pageContext.request.contextPath }/board/view?no=${list.no}&p=${current}">
+											href="${pageContext.request.contextPath }/board/view?no=${list.no}&p=${current}&kwd=${kwd}">
 											${list.title}</a>
 									</c:when>
 									<c:otherwise>
 										<img
 											src="${pageContext.request.contextPath }/assets/images/reply.png">
 										<a
-											href="${pageContext.request.contextPath }/board/view?no=${list.no}&p=${current}">
+											href="${pageContext.request.contextPath }/board/view?no=${list.no}&p=${current}&kwd=${kwd}">
 											${list.title}</a>
 									</c:otherwise>
 								</c:choose></td>
-							<td>${list.user_name}</td>
+							<td>${list.userName}</td>
 							<td>${list.hits }</td>
-							<td>[${list.reg_date }]</td>
+							<td>[${list.regDate }]</td>
 							<c:choose>
 								<c:when test="${empty authUser }">
 									<td></td>
 								</c:when>
 								<c:otherwise>
-									<c:if test="${authUser.no == list.user_no}">
+									<c:if test="${authUser.no == list.userNo}">
 										<td id="delete_td"><a href="" data-id="${list.no}"
 											class="del"><img
 												src="${pageContext.request.contextPath }/assets/images/recycle.png"></a></td>
 									</c:if>
-									<c:if test="${authUser.no != list.user_no}">
+									<c:if test="${authUser.no != list.userNo}">
 										<td><img
 											src="${pageContext.request.contextPath }/assets/images/recycle1.png"></td>
 									</c:if>
@@ -118,7 +125,7 @@
 						<c:choose>
 							<c:when test="${1 <= start-size+1 }">
 								<li><a
-									href="${pageContext.request.contextPath }/board?p=${start-size}">◀</a></li>
+									href="${pageContext.request.contextPath }/board?p=${start-size}&kwd=${kwd}">◀</a></li>
 							</c:when>
 							<c:otherwise>
 								<li></li>
@@ -135,7 +142,7 @@
 									<c:choose>
 										<c:when test="${last >= i}">
 											<li><a
-												href="${pageContext.request.contextPath }/board?p=${i}">${i}</a></li>
+												href="${pageContext.request.contextPath }/board?p=${i}&kwd=${kwd}">${i}</a></li>
 										</c:when>
 										<c:otherwise>
 											<li>${i}</li>
@@ -148,7 +155,7 @@
 						<c:choose>
 							<c:when test="${last >= start+size }">
 								<li><a
-									href="${pageContext.request.contextPath }/board?p=${start+size}">▶</a></li>
+									href="${pageContext.request.contextPath }/board?p=${start+size}&kwd=${kwd}">▶</a></li>
 							</c:when>
 							<c:otherwise>
 								<li></li>
@@ -163,7 +170,7 @@
 						</c:when>
 						<c:otherwise>
 							<a
-								href="${pageContext.request.contextPath }/board/write?p=${current}"
+								href="${pageContext.request.contextPath }/board/write?p=${current}&kwd=${kwd}"
 								id="new-book">글쓰기</a>
 						</c:otherwise>
 					</c:choose>

@@ -7,6 +7,7 @@ public class Page {
 	private int lastPage;
 	private int currentPage;
 	private int listSize;
+	private String kwd;
 
 	public int getListSize() {
 		return listSize;
@@ -46,6 +47,14 @@ public class Page {
 
 	public void setCurrentPage(int currentPage) {
 		this.currentPage = currentPage;
+	}
+
+	public String getKwd() {
+		return kwd;
+	}
+
+	public void setKwd(String kwd) {
+		this.kwd = kwd;
 	}
 
 }

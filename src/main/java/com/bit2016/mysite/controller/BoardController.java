@@ -22,72 +22,83 @@ public class BoardController {
 	private BoardService boardService;
 
 	@RequestMapping("")
-	public String list(@RequestParam(value = "p", required = true, defaultValue = "1") int p, Model model) {
-		HashMap<String, Object> hm = boardService.list(p);
+	public String list(@RequestParam(value = "p", required = true, defaultValue = "1") int p,
+			@RequestParam(value = "kwd", required = true, defaultValue = "") String kwd, Model model) {
+		HashMap<String, Object> hm = boardService.list(p, kwd);
 		model.addAttribute("hm", hm);
 		return "board/list";
 	}
 
 	@RequestMapping("/view")
 	public String view(@RequestParam(value = "no", required = true, defaultValue = "0") Long no,
-			@RequestParam(value = "p", required = true, defaultValue = "1") int p, Model model) {
+			@RequestParam(value = "p", required = true, defaultValue = "1") int p,
+			@RequestParam(value = "kwd", required = true, defaultValue = "") String kwd, Model model) {
 		HashMap<String, Object> hm = boardService.view(no, p);
 		model.addAttribute("hm", hm);
-		model.addAttribute("p", hm.get("p"));
+		model.addAttribute("kwd", kwd);
 		return "board/view";
 	}
 
 	@RequestMapping(value = "/write", method = RequestMethod.POST)
 	public String write(@ModelAttribute Board vo, @RequestParam(value = "p", required = true, defaultValue = "1") int p,
-			HttpSession session, Model model) {
+			@RequestParam(value = "kwd", required = true, defaultValue = "") String kwd, HttpSession session,
+			Model model) {
 		boardService.write(vo, session);
-		return "redirect:/board?p=" + p;
+		return "redirect:/board?p=" + p + "&kwd=" + kwd;
 
 	}
 
 	@RequestMapping(value = "/write", method = RequestMethod.GET)
-	public String write(@RequestParam(value = "p", required = true, defaultValue = "1") int p, Model model) {
+	public String write(@RequestParam(value = "p", required = true, defaultValue = "1") int p,
+			@RequestParam(value = "kwd", required = true, defaultValue = "") String kwd, Model model) {
 		model.addAttribute("p", p);
+		model.addAttribute("kwd", kwd);
 		return "board/write";
 	}
 
 	@RequestMapping("/delete")
 	public String delete(@RequestParam(value = "no", required = true, defaultValue = "0") Long no,
-			@RequestParam(value = "p", required = true, defaultValue = "1") int p) {
+			@RequestParam(value = "p", required = true, defaultValue = "1") int p,
+			@RequestParam(value = "kwd", required = true, defaultValue = "") String kwd) {
 		boardService.delete(no);
-		return "redirect:/board?p=" + p;
+		return "redirect:/board?p=" + p + "&kwd=" + kwd;
 	}
 
 	@RequestMapping(value = "/modify", method = RequestMethod.GET)
 	public String modify(@RequestParam(value = "no", required = true, defaultValue = "0") Long no,
-			@RequestParam(value = "p", required = true, defaultValue = "1") int p, Model model) {
+			@RequestParam(value = "p", required = true, defaultValue = "1") int p,
+			@RequestParam(value = "kwd", required = true, defaultValue = "") String kwd, Model model) {
 		HashMap<String, Object> hm = boardService.view(no, p);
 		model.addAttribute("hm", hm);
-		model.addAttribute("p", hm.get("p"));
+		model.addAttribute("kwd", kwd);
 		return "board/modify";
 	}
 
 	@RequestMapping(value = "/modify", method = RequestMethod.POST)
 	public String modify(@ModelAttribute Board vo,
 			@RequestParam(value = "p", required = true, defaultValue = "1") int p,
-			@RequestParam(value = "no", required = true, defaultValue = "1") int no) {
+			@RequestParam(value = "no", required = true, defaultValue = "1") int no,
+			@RequestParam(value = "kwd", required = true, defaultValue = "") String kwd) {
 		boardService.update(vo);
-		return "redirect:/board/view?no=" + no + "&p=" + p;
+		return "redirect:/board/view?no=" + no + "&p=" + p + "&kwd=" + kwd;
 	}
 
 	@RequestMapping(value = "/reply", method = RequestMethod.GET)
 	public String reply(@RequestParam(value = "rno", required = true, defaultValue = "0") Long rno,
-			@RequestParam(value = "p", required = true, defaultValue = "1") int p, Model model) {
+			@RequestParam(value = "p", required = true, defaultValue = "1") int p,
+			@RequestParam(value = "kwd", required = true, defaultValue = "") String kwd, Model model) {
 		model.addAttribute("no", rno);
 		model.addAttribute("p", p);
+		model.addAttribute("kwd", kwd);
 		return "board/reply";
 	}
 
 	@RequestMapping(value = "/reply", method = RequestMethod.POST)
 	public String reply(@RequestParam(value = "rno", required = true, defaultValue = "0") Long rno,
-			@RequestParam(value = "p", required = true, defaultValue = "1") int p, @ModelAttribute Board vo,
+			@RequestParam(value = "p", required = true, defaultValue = "1") int p,
+			@RequestParam(value = "kwd", required = true, defaultValue = "") String kwd, @ModelAttribute Board vo,
 			HttpSession session, Model model) {
 		boardService.reply(vo, session, rno);
-		return "redirect:/board?p=" + p;
+		return "redirect:/board?p=" + p + "&kwd=" + kwd;
 	}
 }

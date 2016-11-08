@@ -20,7 +20,6 @@
 <script>
 	$(function() {
 		$("#join-form").submit(function() {
-			return true;
 			//1.이름 체크
 			if ($("#name").val() == "") {
 				$("#dialog p").text("이름은 필수 입력 항목입니다.");
@@ -71,7 +70,7 @@
 							}
 							$
 									.ajax({
-										url : "${pageContext.request.contextPath }/api/user?a=chkemail&email="
+										url : "${pageContext.request.contextPath }/user/api/chkemail?email="
 												+ email,
 										type : "get",
 										dataType : "json",

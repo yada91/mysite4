@@ -1,5 +1,109 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="">
+<mapper namespace="board">
+
+
+	<insert id="insert" parameterType="board">
+	
+		<![CDATA[
+		INSERT INTO BOARD
+				 VALUES (board_SEQ.NEXTVAL, 
+				 		 #{title},
+				 		 #{content},
+				 		 SYSDATE,
+				 		 0,
+				 		 #{userNo},
+					NVL ((SELECT MAX (group_no) FROM board), 0) + 1,1,0)
+	
+		]]>
+
+	</insert>
+
+	<select id="selectByPage" parameterType="page" resultType="board">
+		<![CDATA[
+	SELECT * 
+		FROM (SELECT ROWNUM AS rn,
+					 a1.* 
+					 FROM ( SELECT b.no, 
+					 			   b.title, 
+					 			   b.hits, 
+					 			   TO_CHAR (b.reg_date, 'yyyy-mm-dd hh:mi:ss') AS regDate, 
+					 			   b.DEPTH, 
+					 			   u.NAME, 
+					 			   b.USER_NO as userNo 
+					 		FROM board b, users u 
+					 			   	WHERE b.USER_NO = u.NO 
+					 			   		]]>
+		<if test="kwd != null and '' != kwd">
+		<![CDATA[
+							AND (b.TITLE like '%'||#{kwd} ||'%' OR b.CONTENT LIKE '%'||#{kwd} ||'%')
+		]]>
+		</if>
+		<![CDATA[
+					 		ORDER BY group_no DESC, order_no ASC) a1) a2 
+			 WHERE (#{currentPage}- 1) * #{pageSize} + 1 <= a2.rn and a2.rn <= #{currentPage} * #{pageSize}
+		]]>
+	</select>
+
+	<select id="count" parameterType="page" resultType="integer">
+		<![CDATA[
+				select count(*) from board 
+					 			   		]]>
+		<if test="kwd != null and '' != kwd">
+		<![CDATA[
+							where content like '%'||#{kwd} ||'%' OR title like '%'||#{kwd} ||'%'
+		]]>
+		</if>
+	</select>
+	<select id="getView" parameterType="long" resultType="board">
+		<![CDATA[
+			select title,
+				   content,
+				   user_no as userNo
+			from board where no = #{no}
+		]]>
+	</select>
+
+	<select id="getReplyView" parameterType="long" resultType="board">
+		<![CDATA[
+			select group_no as groupNo, 
+				   order_no as orderNo,
+				   depth from board where no = #{no}
+		]]>
+	</select>
+	<update id="update" parameterType="board">
+	<![CDATA[
+			UPDATE board set title = #{title}, content= #{content} where no = #{no}
+	]]>
+	</update>
+	<update id="updateHits" parameterType="long">
+	<![CDATA[
+		UPDATE board set hits = hits + 1  where no = #{no}
+	]]>
+	</update>
+	<update id="updateReply" parameterType="board">
+	<![CDATA[
+			UPDATE board SET order_no = order_no + 1 WHERE group_no = #{groupNo}  AND order_no > #{orderNo}
+	]]>
+	</update>
+
+	<insert id="insertReply" parameterType="board">
+	
+		<![CDATA[
+	INSERT INTO 
+			BOARD 
+			VALUES (board_SEQ.NEXTVAL,
+					 #{title},#{content}, SYSDATE, 0,#{userNo},#{groupNo},#{orderNo},#{depth})
+	
+		]]>
+
+	</insert>
+
+	<delete id="delete" parameterType="long">
+		<![CDATA[
+			DELETE FROM BOARD WHERE no = #{no}
+		]]>
+	</delete>
+
 </mapper>

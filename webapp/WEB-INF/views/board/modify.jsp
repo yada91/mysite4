@@ -17,7 +17,7 @@
 		<div id="content">
 			<div id="board">
 				<form class="board-form" method="post"
-					action="${pageContext.request.contextPath }/board/modify?no=${hm.view.no}&p=${p}">
+					action="${pageContext.request.contextPath }/board/modify?no=${hm.view.no}&p=${hm.p}&kwd=${kwd}">
 					<table class="tbl-ex">
 						<tr>
 							<th colspan="2">글수정</th>
@@ -33,7 +33,7 @@
 						</tr>
 					</table>
 					<div class="bottom">
-						<a href="${pageContext.request.contextPath }/board?p=${p}">취소</a>
+						<a href="${pageContext.request.contextPath }/board?p=${p}&kwd=${kwd}">취소</a>
 						<input type="submit" value="수정">
 					</div>
 				</form>

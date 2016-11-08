@@ -25,7 +25,7 @@
 				+ "<strong>" + vo.regdate + "</strong>" + "<p>"
 				+ vo.content.replace(/\n/gi, "<br>") + "</p>"
 				+ "<a href='' data-id="+vo.id+">삭제</a>" + "</li>";
-		if (flag == true) {
+		if (flag) {
 			$("#list-guestbook").append(htmls);
 		} else {
 			$("#list-guestbook").prepend(htmls);
@@ -38,14 +38,13 @@
 
 		var valid = true;
 		allFields.removeClass("ui-state-error");
-
 		if (valid) {
-			var param = "a=ajax-delete&name=" + $("#name1").val() + "&pw="
+			var param = "name=" + $("#name1").val() + "&password="
 					+ $("#password1").val() + "&id=" + dataId;
 
 			//ajax 통신 시작
 			$.ajax({
-				url : "${pageContext.request.contextPath }/api/gb?" + param,
+				url : "${pageContext.request.contextPath }/gb/api/delete",
 				type : "get",
 				dataType : "json",
 				data : param,
@@ -75,13 +74,12 @@
 	}
 
 	var fetchList = function() {
-		if (isEnd == true) {
+		if (isEnd) {
 			return;
 		}
 		++page;
 		$.ajax({
-			url : "${pageContext.request.contextPath }/api/gb/ajax-list&p="
-					+ page,
+			url : "${pageContext.request.contextPath }/gb/api/list?p=" + page,
 			type : "get",
 			dataType : "json",
 			data : "",
@@ -125,6 +123,8 @@
 			},
 			close : function() {
 				form[0].reset();
+				$("#dialog-form .validateTips.normal").show();
+				$("#dialog-form .validateTips.error").hide();
 				allFields.removeClass("ui-state-error");
 			}
 		});
@@ -138,7 +138,6 @@
 		$(document).on("click", "#list-guestbook li a", function(event) {
 			event.preventDefault();
 			dialog.dialog("open");
-			console.log($(this).data("id"));
 			dataId = $(this).data("id");
 		});//라이브 이벤트 추가 
 
@@ -146,38 +145,31 @@
 
 	$(function() {
 		//추가
-		$("#add-form").submit(
-				function(event) {
-					event.preventDefault();
+		$("#add-form").submit(function(event) {
+			event.preventDefault();
 
-					var name = $("input[name='name']").val()
-					var password = $("input[name='password']").val()
-					var content = $("textarea[name='content']").val()
-					var param = "a=ajax-add" + "&name=" + name + "&pw="
-							+ password + "&ct=" + content;
-					console.log("${pageContext.request.contextPath }/api/gb?"
-							+ param);
-
-					//ajax insert 
-					$.ajax({
-						url : "${pageContext.request.contextPath }/api/gb?"
-								+ param,
-						type : "get",
-						dataType : "json",
-						data : param,
-						contentType : "application/json",
-						success : function(response) {
-							if (response.result != "success") {
-								console.error(response.message);
-								return;
-							}
-							render(response.data, false);
-						},
-						error : function(jqXHR, status, e) {
-							console.log(status + ":" + e);
-						}
-					});
-				});
+			var name = $("input[name='name']").val()
+			var password = $("input[name='password']").val()
+			var content = $("textarea[name='content']").val()
+			//ajax insert 
+			$.ajax({
+				url : "${pageContext.request.contextPath }/gb/api/insert",
+				type : "get",
+				dataType : "json",
+				data : param,
+				contentType : "application/json",
+				success : function(response) {
+					if (response.result != "success") {
+						console.error(response.message);
+						return;
+					}
+					render(response.data, false);
+				},
+				error : function(jqXHR, status, e) {
+					console.log(status + ":" + e);
+				}
+			});
+		});
 		//스크롤
 		$(window).scroll(function() {
 			var $window = $(this);
@@ -185,7 +177,7 @@
 			var windowHeight = $window.height();
 			var documentHeight = $(document).height();
 
-			if (scrollTop + windowHeight + 5 > documentHeight) {
+			if (scrollTop + windowHeight + 10 > documentHeight) {
 				fetchList();
 			}
 		});

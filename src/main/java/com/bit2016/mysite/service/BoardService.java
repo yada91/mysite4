@@ -1,6 +1,7 @@
 package com.bit2016.mysite.service;
 
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
@@ -21,15 +22,18 @@ public class BoardService {
 	final int LISTSIZE = 5;
 	final int PAGESIZE = 5;
 
-	public HashMap<String, Object> list(int p) {
-		double total = boardDAO.count();
+	public HashMap<String, Object> list(int p, String kwd) {
+		Page page = new Page();
+		page.setKwd(kwd);
+		
+		double total = boardDAO.count(page);
 		int lastPage = (int) Math.ceil(total / (double) PAGESIZE);
 
-		Page page = new Page();
+	
 		page.setListSize(LISTSIZE);
 		page.setPageSize(PAGESIZE);
 		page.setLastPage(lastPage);
-
+		page.setKwd(kwd);
 		int currentPage = p;
 		page.setCurrentPage(currentPage);
 
@@ -42,10 +46,10 @@ public class BoardService {
 		} else {
 			page.setStartPage(1);
 		}
-
+		List<Board> list = boardDAO.select(page);
 		HashMap<String, Object> hm = new HashMap<String, Object>();
 		hm.put("total", (int) total);
-		hm.put("list", boardDAO.select(page));
+		hm.put("list", list);
 		hm.put("page", page);
 
 		return hm;
@@ -54,6 +58,7 @@ public class BoardService {
 
 	public HashMap<String, Object> view(Long no, int p) {
 		Board board = boardDAO.view(no);
+		board.setNo(no);
 		boardDAO.updateHits(no);
 		HashMap<String, Object> hm = new HashMap<String, Object>();
 		hm.put("view", board);
@@ -64,7 +69,7 @@ public class BoardService {
 	public void write(Board vo, HttpSession session) {
 
 		Users authUser = (Users) session.getAttribute("authUser");
-		vo.setUser_no(authUser.getNo());
+		vo.setUserNo(authUser.getNo());
 		boardDAO.insert(vo);
 	}
 
@@ -81,14 +86,14 @@ public class BoardService {
 	public void reply(Board vo, HttpSession session, Long no) {
 
 		Users authUser = (Users) session.getAttribute("authUser");
-		vo.setUser_no(authUser.getNo());
+		vo.setUserNo(authUser.getNo());
 
 		Board board = boardDAO.replyView(no);
 
-		vo.setUser_no(authUser.getNo());
-		vo.setGroup_no(board.getGroup_no());
+		vo.setUserNo(authUser.getNo());
+		vo.setGroupNo(board.getGroupNo());
 		vo.setDepth(board.getDepth() + 1);
-		vo.setOrder_no(board.getOrder_no() + 1);
+		vo.setOrderNo(board.getOrderNo() + 1);
 
 		boardDAO.updateReply(vo);
 		boardDAO.insertReply(vo);

@@ -18,12 +18,28 @@ public class GuestBookService {
 		return list;
 	}
 
-	public void add(GuestBook vo) {
-		guestBookDAO.insert(vo);
+	public Long add(GuestBook vo) {
+		Long id = guestBookDAO.insert(vo);
+		return id;
 	}
 
 	public void delete(Long id) {
 		guestBookDAO.delete(id);
+	}
+
+	public boolean delete(GuestBook vo) {
+
+		return guestBookDAO.delete(vo);
+	}
+
+	public List<GuestBook> selectByPage(int page) {
+		List<GuestBook> list = guestBookDAO.selectByPage(page);
+		return list;
+	}
+
+	public GuestBook get(Long id) {
+		GuestBook vo = guestBookDAO.get(id);
+		return vo;
 	}
 
 }

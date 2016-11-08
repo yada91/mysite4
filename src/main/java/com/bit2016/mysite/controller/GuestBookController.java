@@ -50,6 +50,6 @@ public class GuestBookController {
 	@RequestMapping("/ajax")
 	public String ajaxList() {
 
-		return "";
+		return "guestbook/list-ajax";
 	}
 }
