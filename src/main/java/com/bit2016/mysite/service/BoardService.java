@@ -67,7 +67,6 @@ public class BoardService {
 
 	public Board view(Long no) {
 		Board board = boardDAO.view(no);
-		board.setNo(no);
 		return board;
 	}
 

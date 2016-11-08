@@ -62,8 +62,8 @@ public class BoardController {
 			@RequestParam(value = "p", required = true, defaultValue = "1") int p,
 			@RequestParam(value = "kwd", required = true, defaultValue = "") String kwd, HttpSession session) {
 		Users authUser = (Users) session.getAttribute("authUser");
-
 		Board board = boardService.view(no);
+
 		if (authUser != null) {
 			if (board.getUserNo() == authUser.getNo()) {
 				boardService.delete(no);

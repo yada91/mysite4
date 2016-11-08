@@ -69,7 +69,8 @@
 	</select>
 	<select id="getView" parameterType="long" resultType="board">
 		<![CDATA[
-			select title,
+			select  no,
+					title,
 				   content,
 				   user_no as userNo
 			from board where no = #{no}
