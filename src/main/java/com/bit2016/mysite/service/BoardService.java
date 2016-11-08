@@ -25,11 +25,10 @@ public class BoardService {
 	public HashMap<String, Object> list(int p, String kwd) {
 		Page page = new Page();
 		page.setKwd(kwd);
-		
+
 		double total = boardDAO.count(page);
 		int lastPage = (int) Math.ceil(total / (double) PAGESIZE);
 
-	
 		page.setListSize(LISTSIZE);
 		page.setPageSize(PAGESIZE);
 		page.setLastPage(lastPage);
@@ -64,6 +63,12 @@ public class BoardService {
 		hm.put("view", board);
 		hm.put("p", p);
 		return hm;
+	}
+
+	public Board view(Long no) {
+		Board board = boardDAO.view(no);
+		board.setNo(no);
+		return board;
 	}
 
 	public void write(Board vo, HttpSession session) {

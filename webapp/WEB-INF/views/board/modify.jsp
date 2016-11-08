@@ -25,7 +25,7 @@
 						<tr>
 							<td class="label">제목</td>
 							<td><input type="text" name="title"
-								value="${hm.view.title }"></td>
+								value="${hm.view.title } "></td>
 						</tr>
 						<tr>
 							<td class="label">내용</td>

@@ -5,9 +5,10 @@
 
 
 	<insert id="insert" parameterType="board">
-	
-		<![CDATA[
-		INSERT INTO BOARD
+		<choose>
+			<when test="groupNo==null">
+			<![CDATA[
+			INSERT INTO BOARD
 				 VALUES (board_SEQ.NEXTVAL, 
 				 		 #{title},
 				 		 #{content},
@@ -16,8 +17,18 @@
 				 		 #{userNo},
 					NVL ((SELECT MAX (group_no) FROM board), 0) + 1,1,0)
 	
+			]]>
+			</when>
+			<otherwise>
+		<![CDATA[
+			INSERT INTO 
+			BOARD 
+			VALUES (board_SEQ.NEXTVAL,
+					 #{title},#{content}, SYSDATE, 0,#{userNo},#{groupNo},#{orderNo},#{depth})
+	
 		]]>
-
+			</otherwise>
+		</choose>
 	</insert>
 
 	<select id="selectByPage" parameterType="page" resultType="board">
@@ -40,10 +51,10 @@
 							AND (b.TITLE like '%'||#{kwd} ||'%' OR b.CONTENT LIKE '%'||#{kwd} ||'%')
 		]]>
 		</if>
-		<![CDATA[
+			<![CDATA[
 					 		ORDER BY group_no DESC, order_no ASC) a1) a2 
 			 WHERE (#{currentPage}- 1) * #{pageSize} + 1 <= a2.rn and a2.rn <= #{currentPage} * #{pageSize}
-		]]>
+			]]>
 	</select>
 
 	<select id="count" parameterType="page" resultType="integer">
@@ -88,17 +99,7 @@
 	]]>
 	</update>
 
-	<insert id="insertReply" parameterType="board">
-	
-		<![CDATA[
-	INSERT INTO 
-			BOARD 
-			VALUES (board_SEQ.NEXTVAL,
-					 #{title},#{content}, SYSDATE, 0,#{userNo},#{groupNo},#{orderNo},#{depth})
-	
-		]]>
 
-	</insert>
 
 	<delete id="delete" parameterType="long">
 		<![CDATA[

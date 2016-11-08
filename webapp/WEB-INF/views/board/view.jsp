@@ -43,7 +43,7 @@
 						</c:when>
 						<c:otherwise>
 							<a
-								href="${pageContext.request.contextPath }/board/reply?rno=${hm.view.no}&p=${hm.p}&kwd=${kwd}">답글
+								href="${pageContext.request.contextPath }/board/reply?r	no=${hm.view.no}&p=${hm.p}&kwd=${kwd}">답글
 								달기</a>
 						</c:otherwise>
 					</c:choose>

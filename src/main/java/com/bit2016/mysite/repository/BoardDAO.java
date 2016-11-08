@@ -52,7 +52,7 @@ public class BoardDAO {
 	}
 
 	public void insertReply(Board vo) {
-		sqlSession.insert("board.insertReply", vo);
+		sqlSession.insert("board.insert", vo);
 	}
 
 	public void delete(Long no) {
