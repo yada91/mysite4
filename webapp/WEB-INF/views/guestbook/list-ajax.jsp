@@ -151,7 +151,7 @@
 			var name = $("input[name='name']").val()
 			var password = $("input[name='password']").val()
 			var content = $("textarea[name='content']").val()
-			//ajax insert 
+			var param="name="+name+"&password="+password+"&content="+content;
 			$.ajax({
 				url : "${pageContext.request.contextPath }/gb/api/insert",
 				type : "get",
