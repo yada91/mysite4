@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.bit2016.mysite.repository.GuestBookDAO;
 import com.bit2016.mysite.service.GuestBookService;
 import com.bit2016.mysite.vo.GuestBook;
+import com.bit2016.security.Auth;
 
 @Controller
 @RequestMapping("/gb")
@@ -19,6 +20,7 @@ public class GuestBookController {
 	@Autowired
 	private GuestBookService guestbookService;
 
+	@Auth
 	@RequestMapping("")
 	public String list(Model model) {
 		List<GuestBook> list = guestbookService.selectAll();

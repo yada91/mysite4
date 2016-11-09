@@ -70,9 +70,8 @@ public class BoardService {
 		return board;
 	}
 
-	public void write(Board vo, HttpSession session) {
+	public void write(Board vo, Users authUser) {
 
-		Users authUser = (Users) session.getAttribute("authUser");
 		vo.setUserNo(authUser.getNo());
 		boardDAO.insert(vo);
 	}
@@ -87,9 +86,8 @@ public class BoardService {
 
 	}
 
-	public void reply(Board vo, HttpSession session, Long no) {
+	public void reply(Board vo, Users authUser, Long no) {
 
-		Users authUser = (Users) session.getAttribute("authUser");
 		vo.setUserNo(authUser.getNo());
 
 		Board board = boardDAO.replyView(no);

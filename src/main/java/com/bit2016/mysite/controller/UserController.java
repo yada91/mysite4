@@ -43,26 +43,6 @@ public class UserController {
 		return "user/joinsuccess";
 	}
 
-	@RequestMapping("/login")
-	public String login(@RequestParam(value = "email", required = true, defaultValue = "") String email,
-			@RequestParam(value = "password", required = true, defaultValue = "") String password,
-			HttpSession session) {
-		Users users = userService.login(email, password);
-		if (users == null) {
-			return "redirect:/user/loginform?result=fail";
-		}
-		// 성공
-		session.setAttribute("authUser", users);
-
-		return "redirect:/";
-	}
-
-	@RequestMapping("/logout")
-	public String logout(HttpSession session) {
-		session.invalidate();
-		return "redirect:/";
-	}
-
 	@RequestMapping("/modifyform")
 	public String modifyForm(HttpSession session, Model model) {
 		Users authUser = (Users) session.getAttribute("authUser");
